@@ -16,21 +16,32 @@ export const WeatherHook = () => {
     const [weatherData, setWeatherData] = useState<any>()
     const humanDate = convertEpochTimeToString(weatherData?.dt);
     const router = useRouter();
+
     const getUserData = async () => {
-        const { data } = await axios.get("http://localhost:5000/user/getUser", {
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem('accessToken')
-            }
-        });
-        setUser({ login: data.login, name: data.name, url: data.url })
+        try {
+            const { data } = await axios.get("http://localhost:5000/user/getUser", {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem('accessToken')
+                }
+            });
+            setUser({ login: data.login, name: data.name, url: data.url })
+
+        } catch (error: any) {
+            console.log(error.message)
+        }
     }
     const getWeatherForecast = async (city: string) => {
-        const { data } = await axios.post("http://localhost:5000/home", { city: city }, {
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-        setWeatherData(data)
+        try {
+            const { data } = await axios.post("http://localhost:5000/home", { city: city }, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            setWeatherData(data)
+
+        } catch (error: any) {
+            console.log(error.message)
+        }
     }
 
     return {

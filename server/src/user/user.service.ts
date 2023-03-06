@@ -12,22 +12,24 @@ export class UserService {
       client_secret: process.env.CLIENT_SECRET,
       code: code,
     };
-
-    const client = await axios.post(
-      'https://github.com/login/oauth/access_token',
-      postData,
-      {
-        headers: {
-          Accept: 'application/json',
+    try {
+      const client = await axios.post(
+        'https://github.com/login/oauth/access_token',
+        postData,
+        {
+          headers: {
+            Accept: 'application/json',
+          },
         },
-      },
-    );
-    return client.data;
+      );
+      return client.data;
+    } catch (error) {
+      return error.message;
+    }
   }
 
   async getUserData(req: Request) {
     req.get('Authorization');
-
     return await axios
       .get('https://api.github.com/user', {
         headers: {
