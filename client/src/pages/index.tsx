@@ -56,7 +56,8 @@ export default function Home() {
             return (
               <Form>
                 <Heading as='h1' size='4xl' noOfLines={6}>Welcome to the weather forecast application!</Heading>
-                <Box mt={4}>
+                <Heading mt={5} as='h3' size='md' color={'darkcyan'} noOfLines={6}>Please login with your Github user to use the application and view the weather in your city!</Heading>
+                <Box mt={8}>
                   <Button type='submit' isLoading={isSubmitting}>Log in with Github</Button>
                 </Box>
               </Form>

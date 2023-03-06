@@ -27,12 +27,15 @@ export class UserService {
   async getUserData(req: Request) {
     req.get('Authorization');
 
-    const client = await axios.get('https://api.github.com/user', {
-      headers: {
-        Authorization: req.get('Authorization'),
-      },
-    });
-    console.log(client.data);
-    return client.data;
+    return await axios
+      .get('https://api.github.com/user', {
+        headers: {
+          Authorization: req.get('Authorization'),
+        },
+      })
+      .then((res) => res.data)
+      .catch((e) => {
+        console.log(e);
+      });
   }
 }

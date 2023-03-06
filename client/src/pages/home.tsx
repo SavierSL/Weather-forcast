@@ -9,15 +9,22 @@ import axios from 'axios';
 interface HomeProps {
 
 }
+interface UserI {
+    login: string;
+    name: string;
+    url: string;
+}
 
 const Home: React.FC<HomeProps> = ({ }) => {
     const [rerender, setRerender] = useState<boolean>(true);
     const [weatherData, setWeatherData] = useState<any>()
+    const [user, setUser] = useState<UserI>({ login: "", name: "", url: "" })
     const router = useRouter();
     useEffect(() => {
         if (!localStorage.getItem('accessToken')) {
             router.push('/');
         }
+        getUserData()
     }, [rerender])
     const getWeatherForecast = async (city: string) => {
         const data = await axios.post("http://localhost:5000/home", { city: city }, {
@@ -28,19 +35,32 @@ const Home: React.FC<HomeProps> = ({ }) => {
         setWeatherData(data.data)
 
     }
-    console.log(weatherData)
+    const getUserData = async () => {
+        const { data } = await axios.get("http://localhost:5000/user/getUser", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('accessToken')
+            }
+        });
+
+        setUser({ login: data.login, name: data.name, url: data.url })
+
+    }
+
+    console.log(user)
     const epochTime = weatherData?.dt; // example epoch time in seconds
     const date = new Date(epochTime * 1000); // convert to milliseconds and create Date object
     const humanDate = date.toLocaleString();
     return (
         <Wrapper >
             <Box mt={4}>
-                <Button marginLeft='100%' onClick={() => {
-                    localStorage.removeItem('accessToken')
-                    setRerender(!rerender);
-                }}>
-                    Log out
-                </Button>
+                <Flex>
+                    <Button ml={"auto"} onClick={() => {
+                        localStorage.removeItem('accessToken')
+                        setRerender(!rerender);
+                    }}>
+                        Log out
+                    </Button>
+                </Flex>
                 <Box mt={100}>
                     <Formik initialValues={{ city: "" }} onSubmit={async ({ city }) => {
                         return getWeatherForecast(city);
@@ -48,7 +68,12 @@ const Home: React.FC<HomeProps> = ({ }) => {
                         {({ isSubmitting }) => {
                             return (
                                 <Form>
-                                    <Heading as='h1' size='4xl' noOfLines={6}>Welcome to the weather forecast application!</Heading>
+                                    <Heading as='h3' size='2xl' noOfLines={3}> Hi! <span style={{ color: 'darkcyan' }}>{user.name}</span>, </Heading>
+                                    <Heading as='h1' size='4xl' noOfLines={6}>
+                                        Welcome to the weather forecast application!</Heading>
+                                    <Box mt={3}> <span style={{
+                                        fontSize: '15px'
+                                    }}>{user.url}</span></Box>
                                     <Box mt={50}>
                                         <InputField name='city' label='City Name' placeholder='City Name' />
                                         <Button mt={5} type='submit' isLoading={isSubmitting}>Display Weather</Button>
