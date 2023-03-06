@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { FindCityName } from './dto/create-weather.dto';
 import { WeatherService } from './weather.service';
 
-@Controller('weather')
+@Controller('home')
 export class WeatherController {
   constructor(private weatherService: WeatherService) {}
   @Post()
