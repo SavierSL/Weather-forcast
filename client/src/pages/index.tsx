@@ -1,50 +1,28 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import { Form, Formik } from 'formik'
-import { InputField } from '@/components/InputField'
-import { Box, Button } from '@chakra-ui/react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { IndexHook } from '@/components/hooks/indexHook'
 import { Wrapper } from '@/components/wrapper'
-import { Heading } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { getCodeParam } from '@/utils/utils'
+import { Box, Button, Heading } from '@chakra-ui/react'
+import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useEffect } from 'react'
 
 export default function Home() {
-  const [token, setToken] = useState<string | null>(null)
+  const { token, getAccessToken } = IndexHook();
   const router = useRouter();
+
   useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const codeParam = urlParams.get('code');
-
-    async function getAccessToken() {
-      const data = await axios.get("http://localhost:5000/user?code=" + codeParam)
-      if (data.data.access_token) {
-        localStorage.setItem('accessToken', data.data.access_token)
-        setToken(localStorage.getItem('accessToken'))
-
-      }
-    }
-
+    const codeParam = getCodeParam(window.location.search);
     if (codeParam && (localStorage.getItem('accessToken') === null)) {
-      getAccessToken();
+      getAccessToken(codeParam);
     }
-
   }, [token])
 
-
   if (typeof window !== 'undefined') {
-    // Perform localStorage action
     if (localStorage.getItem('accessToken')) {
       router.push('/home')
-
     }
   }
-
 
   return (
     <Box mt={100} >

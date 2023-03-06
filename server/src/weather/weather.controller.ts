@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { FindCityName } from './dto/create-weather.dto';
 import { WeatherService } from './weather.service';
 
@@ -8,11 +8,5 @@ export class WeatherController {
   @Post()
   getWeather(@Body() body: FindCityName): any {
     return this.weatherService.findCurrentWeather(body);
-  }
-  @Get(':location')
-  getWeatherByAddress(@Param('location') address: string): any {
-    return {
-      address,
-    };
   }
 }
