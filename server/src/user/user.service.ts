@@ -2,15 +2,17 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { GetAccessToken } from './dto/create-user.dto';
 import { Request } from 'express';
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Injectable()
 export class UserService {
   async getAccessToken(code: GetAccessToken) {
     const postData = {
-      client_id: '0cc16f60158be8d1cc39',
-      client_secret: 'e15a410716088db6fc1a65964d9f96a260f15d55',
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
       code: code,
     };
-    console.log(code);
+
     const client = await axios.post(
       'https://github.com/login/oauth/access_token',
       postData,
@@ -20,7 +22,6 @@ export class UserService {
         },
       },
     );
-    console.log(client.data);
     return client.data;
   }
 
@@ -35,7 +36,7 @@ export class UserService {
       })
       .then((res) => res.data)
       .catch((e) => {
-        console.log(e);
+        return e;
       });
   }
 }
