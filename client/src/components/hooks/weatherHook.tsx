@@ -19,7 +19,7 @@ export const WeatherHook = () => {
 
     const getUserData = async () => {
         try {
-            const { data } = await axios.get("http://localhost:5000/user/getUser", {
+            const { data } = await axios.get("http://localhost:5000/user/user-data", {
                 headers: {
                     "Authorization": "Bearer " + localStorage.getItem('accessToken')
                 }
@@ -32,7 +32,7 @@ export const WeatherHook = () => {
     }
     const getWeatherForecast = async (city: string) => {
         try {
-            const { data } = await axios.post("http://localhost:5000/home", { city: city }, {
+            const { data } = await axios.post("http://localhost:5000/weather", { city: city }, {
                 headers: {
                     'Accept': 'application/json'
                 }

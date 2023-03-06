@@ -11,7 +11,7 @@ export class UserController {
   getAccessToken(@Query('code') code: GetAccessToken) {
     return this.userService.getAccessToken(code);
   }
-  @Get('/getUser')
+  @Get('/user-data')
   getUserData(@Req() req: Request) {
     return this.userService.getUserData(req);
   }
